@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bayes' theorem as area</title>
+<style>
+  :root{
+    --ground:#F4F5F2;
+    --panel:#FBFBF9;
+    --ink:#192230;
+    --muted:#5C6675;
+    --line:#CDD2CE;
+    --a:#2E73B8;      /* event A  */
+    --b:#E08A1E;      /* event B  */
+    --both:#5B4B8A;   /* A and B  */
+    --neither:#E5E8E3;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding:22px 16px 40px;
+  }
+  .wrap{max-width:660px;margin:0 auto;}
+  header h1{
+    font-size:1.45rem;letter-spacing:-0.02em;margin:0 0 4px;font-weight:650;
+  }
+  header p{margin:0 0 18px;color:var(--muted);font-size:.93rem;}
+  .stage{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 8px 4px;
+  }
+  svg{display:block;width:100%;height:auto;}
+  .legend{
+    display:flex;flex-wrap:wrap;gap:6px 14px;
+    padding:8px 12px 2px;font-size:.8rem;color:var(--muted);
+  }
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .sw{width:12px;height:12px;border-radius:3px;display:inline-block;}
+
+  .read{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 4px;
+  }
+  .chip{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:9px 10px;
+  }
+  .chip .k{font-size:.72rem;color:var(--muted);font-family:Georgia,"Times New Roman",serif;font-style:italic;}
+  .chip .v{font-size:1.05rem;font-weight:600;font-variant-numeric:tabular-nums;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;}
+
+  .formula{
+    margin:14px 0 4px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:14px 16px;
+    font-family:Georgia,"Times New Roman",serif;font-size:1.05rem;
+    overflow-x:auto;
+  }
+  .formula .row{display:flex;align-items:center;gap:.5ch;white-space:nowrap;}
+  .formula i{font-style:italic;}
+  .frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .15ch;}
+  .frac .top{border-bottom:1.5px solid var(--ink);padding:0 .4ch;}
+  .frac .bot{padding:0 .4ch;}
+  .eq-check{margin-top:10px;font-family:ui-monospace,Menlo,monospace;font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .ok{color:#2E7D46;font-weight:600;}
+
+  .layout{display:flex;gap:18px;align-items:stretch;}
+  .layout .stage{flex:1 1 auto;min-width:0;}
+  .controls{
+    flex:0 0 210px;display:flex;flex-direction:column;justify-content:center;gap:18px;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 16px;
+  }
+  .controls .hd{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:-6px;}
+  .ctl label{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:4px;}
+  .ctl label .name{font-family:Georgia,serif;font-style:italic;}
+  .ctl label .val{font-variant-numeric:tabular-nums;color:var(--muted);font-family:ui-monospace,Menlo,monospace;}
+  input[type=range]{width:100%;accent-color:var(--ink);height:24px;}
+  #r_pa{accent-color:var(--a);}
+  #r_pb{accent-color:var(--b);}
+  #r_o{accent-color:var(--both);}
+
+  footer{margin-top:22px;font-size:.86rem;color:var(--muted);}
+  footer b{color:var(--ink);font-weight:600;}
+  @media (max-width:520px){
+    .layout{flex-direction:column;}
+    .controls{flex-basis:auto;}
+  }
+  @media (max-width:380px){ .read{grid-template-columns:repeat(2,1fr);} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Bayes' theorem as area</h1>
+    <p>Two rectangles of the <b style="color:var(--ink)">same width</b>, so the width cancels and every probability is just a height you can read off.</p>
+  </header>
+
+  <div class="layout">
+    <div class="stage">
+      <svg id="svg" viewBox="0 0 460 372" role="img" aria-label="Diagram of two equal-width overlapping rectangles representing events A and B inside the sample space Omega.">
+        <g id="scene"></g>
+      </svg>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--a)"></i>A only</span>
+        <span><i class="sw" style="background:var(--both)"></i>A and B</span>
+        <span><i class="sw" style="background:var(--b)"></i>B only</span>
+        <span><i class="sw" style="background:var(--neither)"></i>neither</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="hd">Controls</div>
+      <div class="ctl">
+        <label for="r_pa"><span class="name">P(A)</span><span class="val" id="l_pa"></span></label>
+        <input type="range" id="r_pa" min="5" max="95" step="5" value="45" />
+      </div>
+      <div class="ctl">
+        <label for="r_pb"><span class="name">P(B)</span><span class="val" id="l_pb"></span></label>
+        <input type="range" id="r_pb" min="5" max="95" step="5" value="55" />
+      </div>
+      <div class="ctl">
+        <label for="r_o"><span class="name">P(A∩B)</span><span class="val" id="l_o"></span></label>
+        <input type="range" id="r_o" min="0" max="45" step="5" value="25" />
+      </div>
+    </div>
+  </div>
+
+  <div class="read">
+    <div class="chip"><div class="k">P(A)</div><div class="v" id="o_pa"></div></div>
+    <div class="chip"><div class="k">P(B)</div><div class="v" id="o_pb"></div></div>
+    <div class="chip"><div class="k">P(A∩B)</div><div class="v" id="o_pab"></div></div>
+    <div class="chip"><div class="k">P(A|B)</div><div class="v" id="o_apb" style="color:var(--both)"></div></div>
+    <div class="chip"><div class="k">P(B|A)</div><div class="v" id="o_bpa"></div></div>
+    <div class="chip"><div class="k">P(A∪B)</div><div class="v" id="o_aub"></div></div>
+  </div>
+
+  <div class="formula">
+    <div class="row">
+      <i>P</i>(<i>A</i>|<i>B</i>) =
+      <span class="frac"><span class="top"><i>P</i>(<i>B</i>|<i>A</i>)&thinsp;<i>P</i>(<i>A</i>)</span><span class="bot"><i>P</i>(<i>B</i>)</span></span>
+      =
+      <span class="frac"><span class="top"><i>P</i>(<i>A</i>∩<i>B</i>)</span><span class="bot"><i>P</i>(<i>B</i>)</span></span>
+      =
+      <span class="frac"><span class="top">overlap height</span><span class="bot"><i>B</i> height</span></span>
+    </div>
+    <div class="eq-check" id="check"></div>
+  </div>
+
+  <footer>
+    Because A and B span the <b>identical width</b>, area ratios become height ratios. So <b>P(A|B)</b> is literally the fraction of rectangle&nbsp;B's height that lies in the purple overlap — read it straight off the bar on the right.
+  </footer>
+</div>
+
+<script>
+(function(){
+  // geometry of the unit square in SVG space
+  var L=82, R=382, TOP=22, BOT=322, H=BOT-TOP; // square 300x300
+  var W = R - L;
+  function py(p){ return BOT - p*H; }     // probability -> y pixel
+  function fmt(x){ return x.toFixed(2); }
+
+  var els = {
+    scene:document.getElementById('scene'),
+    rpa:document.getElementById('r_pa'), rpb:document.getElementById('r_pb'), ro:document.getElementById('r_o'),
+    lpa:document.getElementById('l_pa'), lpb:document.getElementById('l_pb'), lo:document.getElementById('l_o'),
+    pa:document.getElementById('o_pa'), pb:document.getElementById('o_pb'), pab:document.getElementById('o_pab'),
+    apb:document.getElementById('o_apb'), bpa:document.getElementById('o_bpa'), aub:document.getElementById('o_aub'),
+    check:document.getElementById('check')
+  };
+
+  function rect(x,y,w,h,fill){
+    return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+fill+'"/>';
+  }
+  function bracket(x,yTop,yBot,dir,color){
+    var t = 7*dir;
+    return '<path d="M '+(x+t)+' '+yTop+' H '+x+' V '+yBot+' H '+(x+t)+'" fill="none" stroke="'+color+'" stroke-width="1.6"/>';
+  }
+  function txt(x,y,s,opts){
+    opts=opts||{};
+    return '<text x="'+x+'" y="'+y+'" font-size="'+(opts.size||13)+'" '+
+      'fill="'+(opts.fill||'#192230')+'" text-anchor="'+(opts.anchor||'start')+'" '+
+      'font-family="'+(opts.fam||'ui-sans-serif,system-ui,sans-serif')+'" '+
+      (opts.style?('font-style:'+opts.style+';'):'')+
+      (opts.weight?(' font-weight="'+opts.weight+'"'):'')+'>'+s+'</text>';
+  }
+
+  function draw(){
+    var pa = +els.rpa.value/100, pb = +els.rpb.value/100;
+
+    // valid overlap range: max(0, pa+pb-1) .. min(pa,pb)
+    var oMin = Math.max(0, pa+pb-1), oMax = Math.min(pa,pb);
+    els.ro.min = Math.round(oMin*100);
+    els.ro.max = Math.round(oMax*100);
+    var o = +els.ro.value/100;
+    if(o>oMax){o=oMax;els.ro.value=Math.round(o*100);}
+    if(o<oMin){o=oMin;els.ro.value=Math.round(o*100);}
+
+    // partition along the vertical: A-only, overlap, B-only, neither
+    var s = '';
+    // sample space outline (Omega)
+    s += rect(L,TOP,W,H,'var(--neither)');
+    // colored regions
+    s += rect(L, py(pa-o), W, py(0)-py(pa-o), 'var(--a)');          // A only  [0, pa-o]
+    s += rect(L, py(pa),   W, py(pa-o)-py(pa), 'var(--both)');      // overlap [pa-o, pa]
+    s += rect(L, py(pa+pb-o), W, py(pa)-py(pa+pb-o), 'var(--b)');   // B only  [pa, pa+pb-o]
+    // grid frame
+    s += '<rect x="'+L+'" y="'+TOP+'" width="'+W+'" height="'+H+'" fill="none" stroke="#192230" stroke-width="1.4"/>';
+
+    // Omega label
+    s += txt(L+8, TOP+18, 'Ω', {size:15, style:'italic', fam:'Georgia,serif', fill:'#475063'});
+
+    // A bracket (left) over [0, pa]
+    s += bracket(L-12, py(pa), py(0), +1, 'var(--a)');
+    s += txt(L-22, (py(pa)+py(0))/2+5, 'A', {anchor:'end', size:15, weight:'600', fill:'var(--a)', style:'italic', fam:'Georgia,serif'});
+
+    // B bracket (right) over [pa-o, pa+pb-o]
+    s += bracket(R+12, py(pa+pb-o), py(pa-o), -1, 'var(--b)');
+    s += txt(R+22, (py(pa+pb-o)+py(pa-o))/2+5, 'B', {anchor:'start', size:15, weight:'600', fill:'var(--b)', style:'italic', fam:'Georgia,serif'});
+
+    // overlap callout on the right inner edge
+    var oy = (py(pa)+py(pa-o))/2;
+    if(o>0.04){
+      s += txt(R-8, oy+4, 'A∩B', {anchor:'end', size:11, fill:'#FFFFFF', weight:'600'});
+    }
+
+    // width dimension line under square ("same width w")
+    var dy = BOT+26;
+    s += '<path d="M '+L+' '+dy+' H '+R+'" stroke="#7C8694" stroke-width="1"/>';
+    s += '<path d="M '+L+' '+(dy-4)+' V '+(dy+4)+' M '+R+' '+(dy-4)+' V '+(dy+4)+'" stroke="#7C8694" stroke-width="1"/>';
+    s += txt((L+R)/2, dy+16, 'same width w  (A and B share it → it cancels)', {anchor:'middle', size:11.5, fill:'var(--muted)'});
+
+    els.scene.innerHTML = s;
+
+    // numbers
+    var apb = o/pb, bpa = o/pa, aub = pa+pb-o;
+    els.pa.textContent  = fmt(pa);
+    els.pb.textContent  = fmt(pb);
+    els.pab.textContent = fmt(o);
+    els.apb.textContent = fmt(apb);
+    els.bpa.textContent = fmt(bpa);
+    els.aub.textContent = fmt(aub);
+
+    els.lpa.textContent = fmt(pa);
+    els.lpb.textContent = fmt(pb);
+    els.lo.textContent  = fmt(o);
+
+    var rhs = bpa*pa/pb;
+    els.check.innerHTML = 'check:  P(B|A)·P(A)/P(B) = '+fmt(bpa)+'·'+fmt(pa)+'/'+fmt(pb)+
+      ' = '+fmt(rhs)+'  =  P(A|B) <span class="ok">✓</span>';
+  }
+
+  [els.rpa, els.rpb, els.ro].forEach(function(r){ r.addEventListener('input', draw); });
+  draw();
+})();
+</script>
+</body>
+</html>
