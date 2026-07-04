@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Diffusion Models/Diffusion ELBO.md",
+                "file": "Text to speech/VITS Overview.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Diffusion ELBO"
+              "title": "VITS Overview"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Diffusion Models/Diffusion ELBO.md",
+                "file": "Text to speech/VITS Overview.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Diffusion ELBO"
+              "title": "Backlinks for VITS Overview"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Diffusion Models/Diffusion ELBO.md",
+                "file": "Text to speech/VITS Overview.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Diffusion ELBO"
+              "title": "Outline of VITS Overview"
             }
           }
         ],
@@ -170,8 +170,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 382.5,
-    "collapsed": true
+    "width": 382.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -186,30 +185,35 @@
   },
   "active": "48850763efb3bef5",
   "lastOpenFiles": [
+    "Text to speech/VITS Architecture Diagram.canvas",
+    "Text to speech/VITS Overview.md",
+    "CLAUDE.md",
+    "Generative Adversarial Network.md",
+    "Probability theory/Medical Test Bayes Worked Example.md",
+    "Text to speech/VITS Overview.md.tmp.14332.df8c71877553",
+    "Probability theory/Estimating KL Divergence via Sampling.md",
+    "Probability theory/Estimating KL Divergence via Sampling.md.tmp.10488.dbba7f927eb7",
+    "Probability theory/Estimating KL Divergence via Sampling.md.tmp.10488.7603fd557db3",
+    "Text to speech/VITS Overview.md.tmp.10488.938d1b984ce1",
+    "Text to speech/VITS Overview.md.tmp.10488.a3bccd062432",
+    "Probability theory/Estimating KL Divergence via Sampling.md.tmp.10488.135af7b98a71",
+    "Text to speech/VITS Overview.md.tmp.1564.ede04eb5ec42",
+    "Text to speech/VITS Overview.md.tmp.1564.9e273c013e37",
+    "Text to speech/VITS Overview.md.tmp.23364.511b6322757d",
+    "Text to speech/VITS Overview.md.tmp.23364.b98e1900d753",
+    "Text to speech/Untitled.canvas",
+    "Diffusion Models/Diffusion ELBO.md",
     "Probability theory/Bayes' Theorem with Multiple Conditions.md",
     "Probability theory/Bayes' Theorem.md",
     "Probability theory/Why Generative Models Can Assign a Probability to Data.md",
-    "Diffusion Models/Diffusion ELBO.md",
     "Diffusion Models/Diffusion Models Root.md",
     "Calculus/Integration/Multiple Integrals.md",
-    "Diffusion Models/Diffusion ELBO.md.tmp.15968.49ca45bc5567",
-    "Calculus/Integration/Multiple Integrals.md.tmp.15968.4e589745dc5d",
-    "Calculus/Integration/Multiple Integrals.md.tmp.15968.6940d13b0244",
-    "Diffusion Models/Diffusion ELBO.md.tmp.15968.b66e1e58310e",
-    "Diffusion Models/Diffusion ELBO.md.tmp.15968.206807f2086d",
-    "Calculus/Integration",
-    "Calculus",
     "Probability theory/Chain Rule of Probability.md",
     "Probability theory/Distribution vs Density Function.md",
-    "Diffusion Models/Diffusion ELBO.md.tmp.15968.eda70c4861e6",
-    "Diffusion Models/Diffusion ELBO.md.tmp.15968.c08a3d16966a",
-    "Probability theory/Chain Rule of Probability.md.tmp.15968.9d52efc82ede",
-    "CLAUDE.md",
     "Diffusion Models/Markov Chains and SDEs in Diffusion Models.md",
     "Diffusion Models/Why Reverse Diffusion Adds Noise.md",
     "Probability theory/Concentration of Measure.md",
     "Probability theory/Jensen's Inequality.md",
-    "Probability theory/Medical Test Bayes Worked Example.md",
     "Probability theory/Semicolon Notation in Probability Distributions.md",
     "Diffusion Models/Chess Analogy for Diffusion Models.md",
     "Diffusion Models/Bayes' Theorem in Diffusion Models.md",
@@ -218,7 +222,6 @@
     "2026-06-29.md",
     "U-Net.md",
     "Generative Models.md",
-    "create a link.md",
-    "Welcome.md"
+    "create a link.md"
   ]
 }
