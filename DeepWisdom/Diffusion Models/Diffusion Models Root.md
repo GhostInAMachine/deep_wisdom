@@ -144,6 +144,7 @@ This dramatically cuts compute while preserving perceptual quality, since most d
 - Dhariwal & Nichol, 2021 — classifier guidance, *Diffusion Models Beat GANs on Image Synthesis*
 - Ho & Salimans, 2022 — *Classifier-Free Diffusion Guidance*
 - Rombach et al., 2022 — *High-Resolution Image Synthesis with Latent Diffusion Models* (Stable Diffusion)
+- Austin et al., 2021 — *Structured Denoising Diffusion Models in Discrete State-Spaces* ([[D3PM - Discrete Denoising Diffusion|D3PM]] — diffusion for discrete/categorical data)
 
 ## Related
 
@@ -152,6 +153,7 @@ This dramatically cuts compute while preserving perceptual quality, since most d
 - [[Why Reverse Diffusion Adds Noise]]
 - [[Bayes' Theorem in Diffusion Models]]
 - [[Diffusion ELBO]]
+- [[D3PM - Discrete Denoising Diffusion]]
 - [[Markov Chains and SDEs in Diffusion Models]]
 - [[Score-Based Generative Models]]
 - [[Generative Models]]

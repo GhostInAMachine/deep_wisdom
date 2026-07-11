@@ -4,7 +4,7 @@ type: architecture
 tags: [tts, architecture, generative-models, normalizing-flows, vae, gan, speech]
 created: 2026-07-03
 status: budding
-aliases: [VITS Architecture, Conditional Variational Autoencoder with Adversarial Learning for End-to-End Text-to-Speech]
+aliases: [VITS, VITS Architecture, Conditional Variational Autoencoder with Adversarial Learning for End-to-End Text-to-Speech]
 ---
 
 # VITS
@@ -42,52 +42,22 @@ $$
 p_\theta(z \mid c) = \mathcal{N}\big(f_\theta(z);\ \mu_\theta(c),\ \sigma_\theta(c)\big)\,\left|\det \frac{\partial f_\theta(z)}{\partial z}\right|
 $$
 
-Because `f_θ` is invertible, this lets a simple conditional Gaussian be reshaped into a much more complex distribution over `z` while keeping an exact, tractable likelihood — which is what makes it possible to train the whole thing with a KL term at all. Without the flow, the prior would be stuck with Gaussian expressiveness, capping how well it can match the posterior coming from real audio.
+Because `f_θ` is invertible, this lets a simple conditional Gaussian be reshaped into a much more complex distribution over `z` while keeping an exact, tractable likelihood — which is what makes it possible to train the whole thing with a KL term at all.
+
+> [!note] What is the flow buying us, given the posterior is also Gaussian?
+> The posterior encoder's `q_φ(z|x_lin)` is itself only a diagonal Gaussian, so for a *single* utterance a Gaussian prior could match it exactly — the flow isn't fixing a single-datapoint mismatch. The point is that the prior is conditioned on **text** `c`, not on the specific audio `x`, and one sentence has many valid renditions (the one-to-many nature of speech), each producing a differently-centered Gaussian posterior. The distribution the text prior must cover is therefore the **aggregate** of all those posteriors — a mixture of Gaussians, multimodal and non-Gaussian, even though each component is Gaussian. (For a fixed encoder the ELBO-optimal prior is exactly that aggregate posterior.) A plain Gaussian prior can't represent the mixture; the flow-warped prior can. Equivalently on the generative side: at inference VITS samples the prior and inverts the flow, so without the flow the decoder would only ever be fed Gaussian-distributed latents instead of the richer distribution it was trained on. See [[Normalizing Flows#Flows inside a VAE|flows inside a VAE]] for the general version of this argument.
 
 ### Where the determinant term comes from, and how it's computed
 
-`f` itself is just an ordinary deterministic function — it's not the thing carrying a density. What has a density is a random variable `X`, and a *second* random variable `Y := f(X)` obtained by pushing `X` through `f`. Since `f` is bijective and differentiable, `Y` automatically inherits a well-defined density of its own, related to `X`'s by the change-of-variables formula:
+The Jacobian determinant is exactly the change-of-variables correction: `f_θ` maps the complicated audio latent `z` toward a space where a plain Gaussian applies, and `|det ∂f_θ(z)/∂z|` accounts for how much `f_θ` locally stretches or compresses volume while doing so. The full change-of-variables derivation, why a naive determinant costs `O(d³)`, and how **affine coupling layers** collapse it to an `O(d)` sum of log-scales `s(x_a)` are covered in [[Normalizing Flows]] — VITS uses exactly that construction (coupling layers alternated with channel flips / invertible 1×1 convolutions, in the style of Glow/WaveGlow).
+
+The one fact the KL derivation below needs is the payoff of that construction: because `f_θ = f_L ∘ ⋯ ∘ f_1` is a composition of coupling layers, its whole-stack log-determinant reduces to a single accumulated sum of every layer's log-scale outputs,
 
 $$
-p_X(x) = p_Y(f(x))\,\left|\det \frac{\partial f(x)}{\partial x}\right|
+\log\left|\det \frac{\partial f_\theta(z)}{\partial z}\right| = \sum_{l=1}^{L}\sum_i s_l(\cdot)_i
 $$
 
-— note the absolute value: a density has to stay non-negative regardless of whether the map happens to be orientation-preserving. That's exactly the shape of the prior formula above: `f_θ` maps the complicated audio latent `z` toward a space where a plain Gaussian applies, and the Jacobian determinant is the correction factor for how much `f_θ` locally stretches or compresses volume while doing so.
-
-Computed naively for a `d`-dimensional map, that determinant costs `O(d³)` — far too expensive to differentiate through at every training step for a latent as large as a full frame sequence. VITS avoids this with **affine coupling layers** (the same construction used in RealNVP/Glow/WaveGlow):
-
-1. Split the input `x` into two halves along the channel dimension, `x_a` and `x_b`.
-2. Leave the first half unchanged: `y_a = x_a`.
-3. Transform the second half conditioned on the first — and on external conditioning like `h_text` or a speaker embedding: `y_b = x_b ⊙ exp(s(x_a)) + t(x_a)`, where the log-scale `s` and shift `t` come out of an ordinary neural network fed `x_a`.
-
-The Jacobian of this map is block-triangular:
-
-$$
-\frac{\partial y}{\partial x} = \begin{bmatrix} I & 0 \\[2pt] \dfrac{\partial y_b}{\partial x_a} & \operatorname{diag}\big(\exp(s(x_a))\big) \end{bmatrix}
-$$
-
-and the determinant of a triangular matrix is just the product of its diagonal entries — the messy off-diagonal block `∂y_b/∂x_a` never needs to be evaluated at all:
-
-$$
-\det\frac{\partial y}{\partial x} = \det(I)\cdot\det\big(\operatorname{diag}(\exp(s(x_a)))\big) = \exp\Big(\sum_i s(x_a)_i\Big)
-\quad\Longrightarrow\quad
-\log\left|\det\frac{\partial y}{\partial x}\right| = \sum_i s(x_a)_i
-$$
-
-So the log-determinant of a single coupling layer collapses to a plain sum over its log-scale outputs — an `O(d)` computation that comes almost for free, since `s(x_a)` is already computed as part of the forward pass anyway.
-
-A single coupling layer only ever transforms half the channels, so `f_θ` alternates coupling layers with a fixed channel permutation ("flip", or a learned invertible 1×1 convolution as in Glow) so that every channel eventually gets transformed conditioned on every other channel across depth. A pure permutation has Jacobian determinant `±1` (`log|det| = 0`), so it contributes nothing to the running total — its only job is to reshuffle which half is held fixed in the next layer.
-
-Because `f_θ` is a composition of many such layers, `f_θ = f_L ∘ ⋯ ∘ f_1`, the determinant chain rule `det(AB) = det(A)·det(B)` means the log-determinant of the *whole stack* is just the sum of each layer's log-determinant:
-
-$$
-\log\left|\det \frac{\partial f_\theta(z)}{\partial z}\right| = \sum_{l=1}^{L} \log\left|\det \frac{\partial f_l}{\partial(\text{input to }f_l)}\right| = \sum_{l=1}^{L}\sum_i s_l(\cdot)_i
-$$
-
-That single accumulated number is what appears as `log|det ∂f_θ(z)/∂z|` in the KL derivation below — and, by the identical construction, as the determinant term for the duration flow `g_θ` further down this note.
-
-> [!note] Why coupling layers, not a generic invertible network
-> Autoregressive flows (e.g. IAF/MAF) get the same triangular-Jacobian trick, but pay for it with a mapping that must be computed one dimension at a time in one of the two directions — fast to evaluate but slow to invert, or vice versa. Coupling layers trade away a little expressiveness per layer (only half the channels change at a time) in exchange for **both** directions, `f_θ` and `f_θ⁻¹`, being a single parallel forward pass. That's exactly why VITS can afford to run the same flow forward at training time and inverted at inference time without a speed penalty either way.
+That single number is what appears as `log|det ∂f_θ(z)/∂z|` in the KL derivation below — and, by the identical construction, as the determinant term for the duration flow `g_θ` further down this note. VITS specifically wants **coupling** layers (rather than autoregressive flows like IAF/MAF) because both `f_θ` and `f_θ⁻¹` are a single parallel forward pass, so running the flow forward at training and inverted at inference costs the same either way — see the [[Normalizing Flows#Why the determinant is the bottleneck|coupling-vs-autoregressive comparison in the flows note]].
 
 ## Aligning text and audio: Monotonic Alignment Search
 

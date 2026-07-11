@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Text to speech/VITS Overview.md",
-                "mode": "preview",
+                "file": "Diffusion Models/D3PM - Discrete Denoising Diffusion.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "VITS Overview"
+              "title": "D3PM - Discrete Denoising Diffusion"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Text to speech/VITS Overview.md",
+                "file": "Diffusion Models/D3PM - Discrete Denoising Diffusion.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for VITS Overview"
+              "title": "Backlinks for D3PM - Discrete Denoising Diffusion"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Text to speech/VITS Overview.md",
+                "file": "Diffusion Models/D3PM - Discrete Denoising Diffusion.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of VITS Overview"
+              "title": "Outline of D3PM - Discrete Denoising Diffusion"
             }
           }
         ],
@@ -185,43 +185,43 @@
   },
   "active": "48850763efb3bef5",
   "lastOpenFiles": [
-    "Text to speech/VITS Architecture Diagram.canvas",
+    "Diffusion Models/Diffusion Models Root.md",
+    "Diffusion Models/Diffusion Models Root.md.tmp.34176.884267ab7594",
+    "Diffusion Models/Diffusion Models Root.md.tmp.34176.40ff9430910a",
+    "Diffusion Models/D3PM - Discrete Denoising Diffusion.md",
+    "VITS.md",
+    "Generative Models/Variational Autoencoder.md",
+    "Generative Models/Normalizing Flows.md",
+    "Diffusion Models/Bayes' Theorem in Diffusion Models.md",
+    "Generative Models/Normalizing Flows.md.tmp.31908.12e6538a931d",
     "Text to speech/VITS Overview.md",
+    "Generative Models/Generative Adversarial Network.md",
+    "Generative Models.md",
+    "Generative Models/Variational Autoencoder.md.tmp.29448.8b7ca93450ea",
+    "Generative Models/Variational Autoencoder.md.tmp.29448.ec62cc09a196",
+    "Generative Models/Variational Autoencoder.md.tmp.29448.c42ec3591c5f",
+    "Probability theory/Kullback-Leibler Divergence.md",
+    "Generative Models.md.tmp.29448.46c908952426",
+    "Generative Models/Generative Adversarial Network.md.tmp.29448.568f5aafe225",
+    "Generative Models.md.tmp.29448.41de94faba5f",
+    "Generative Models/Variational Autoencoder.md.tmp.29448.aa1cac5f6352",
     "CLAUDE.md",
+    "Normalizing Flows.md",
+    "Probability theory/Why Generative Models Can Assign a Probability to Data.md",
+    "Probability theory/Concentration of Measure.md",
+    "Probability theory/Semicolon Notation in Probability Distributions.md",
+    "Calculus/Integration/Multiple Integrals.md",
+    "Text to speech/VITS Architecture Diagram.canvas",
     "Generative Adversarial Network.md",
-    "Probability theory/Medical Test Bayes Worked Example.md",
-    "Text to speech/VITS Overview.md.tmp.14332.df8c71877553",
+    "Probability theory/Bayes'/Medical Test Bayes Worked Example.md",
     "Probability theory/Estimating KL Divergence via Sampling.md",
-    "Probability theory/Estimating KL Divergence via Sampling.md.tmp.10488.dbba7f927eb7",
-    "Probability theory/Estimating KL Divergence via Sampling.md.tmp.10488.7603fd557db3",
-    "Text to speech/VITS Overview.md.tmp.10488.938d1b984ce1",
-    "Text to speech/VITS Overview.md.tmp.10488.a3bccd062432",
-    "Probability theory/Estimating KL Divergence via Sampling.md.tmp.10488.135af7b98a71",
-    "Text to speech/VITS Overview.md.tmp.1564.ede04eb5ec42",
-    "Text to speech/VITS Overview.md.tmp.1564.9e273c013e37",
-    "Text to speech/VITS Overview.md.tmp.23364.511b6322757d",
-    "Text to speech/VITS Overview.md.tmp.23364.b98e1900d753",
     "Text to speech/Untitled.canvas",
     "Diffusion Models/Diffusion ELBO.md",
-    "Probability theory/Bayes' Theorem with Multiple Conditions.md",
-    "Probability theory/Bayes' Theorem.md",
-    "Probability theory/Why Generative Models Can Assign a Probability to Data.md",
-    "Diffusion Models/Diffusion Models Root.md",
-    "Calculus/Integration/Multiple Integrals.md",
+    "Probability theory/Bayes'/Bayes' Theorem with Multiple Conditions.md",
+    "Probability theory/Bayes'/Bayes' Theorem.md",
     "Probability theory/Chain Rule of Probability.md",
     "Probability theory/Distribution vs Density Function.md",
     "Diffusion Models/Markov Chains and SDEs in Diffusion Models.md",
-    "Diffusion Models/Why Reverse Diffusion Adds Noise.md",
-    "Probability theory/Concentration of Measure.md",
-    "Probability theory/Jensen's Inequality.md",
-    "Probability theory/Semicolon Notation in Probability Distributions.md",
-    "Diffusion Models/Chess Analogy for Diffusion Models.md",
-    "Diffusion Models/Bayes' Theorem in Diffusion Models.md",
-    "Concentration of Measure.md",
-    "Untitled.canvas",
-    "2026-06-29.md",
-    "U-Net.md",
-    "Generative Models.md",
-    "create a link.md"
+    "Untitled.canvas"
   ]
 }
